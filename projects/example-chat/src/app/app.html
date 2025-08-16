@@ -1,0 +1,34 @@
+<div class="min-h-screen bg-gray-50">
+  <header class="bg-white shadow-sm border-b">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-xl font-semibold text-gray-900">Real-time Chat</h1>
+      @if (authStore.isAuthenticated()) {
+        <div class="flex items-center gap-3">
+          @if (authStore.user(); as user) {
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-gray-700">{{ user.name || 'Anonymous' }}</span>
+            </div>
+          }
+          <button
+            (click)="signOut()"
+            class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      }
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-4">
+    @if (false) {
+      <div class="flex justify-center items-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    } @else if (authStore.isAuthenticated()) {
+      <app-chat />
+    } @else {
+      <app-auth />
+    }
+  </main>
+</div>

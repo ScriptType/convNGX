@@ -1,0 +1,70 @@
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8 mt-8 space-y-6">
+  <div class="text-center space-y-2">
+    <h2 class="text-2xl font-bold text-gray-900 mb-2">Welcome to Chat</h2>
+    <p class="text-gray-600">
+      @if (mode() === 'login') {
+        Sign in to start chatting
+      } @else {
+        Create an account to join the chat
+      }
+    </p>
+    <button (click)="toggleMode()" class="text-sm text-blue-600 hover:underline">
+      @if (mode() === 'login') {
+        Don't have an account? Register
+      } @else {
+        Already have an account? Sign in
+      }
+    </button>
+  </div>
+
+  @if (authStore.error()) {
+    <p class="text-red-600 text-sm">{{ authStore.error() }}</p>
+  }
+
+  @if (mode() === 'login') {
+    <section class="space-y-3">
+      <h3 class="text-left font-semibold text-gray-900">Sign in</h3>
+      <input #email type="email" placeholder="Email" class="w-full border rounded-md px-3 py-2" />
+      <input
+        #password
+        type="password"
+        placeholder="Password"
+        class="w-full border rounded-md px-3 py-2"
+      />
+      <button
+        (click)="signIn(email.value, password.value)"
+        [disabled]="authStore.isLoading()"
+        class="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-70 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+      >
+        @if (authStore.isLoading()) {
+          Signing in…
+        } @else {
+          Login
+        }
+      </button>
+    </section>
+  } @else {
+    <section class="space-y-3">
+      <h3 class="text-left font-semibold text-gray-900">Register</h3>
+      <input #name type="text" placeholder="Name" class="w-full border rounded-md px-3 py-2" />
+      <input #remail type="email" placeholder="Email" class="w-full border rounded-md px-3 py-2" />
+      <input
+        #rpassword
+        type="password"
+        placeholder="Password"
+        class="w-full border rounded-md px-3 py-2"
+      />
+      <button
+        (click)="signUp(remail.value, rpassword.value, name.value)"
+        [disabled]="authStore.isLoading()"
+        class="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-70 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+      >
+        @if (authStore.isLoading()) {
+          Creating account…
+        } @else {
+          Register
+        }
+      </button>
+    </section>
+  }
+</div>

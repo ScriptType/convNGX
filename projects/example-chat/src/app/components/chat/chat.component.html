@@ -1,0 +1,70 @@
+<div class="bg-white rounded-lg shadow-md h-[600px] flex flex-col">
+  <!-- Filter -->
+  <div class="p-4 border-b bg-gray-50/50">
+    <input
+      type="text"
+      [(ngModel)]="filter"
+      name="filter"
+      placeholder="Filter messages..."
+      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+    />
+  </div>
+
+  <!-- Messages area -->
+  <div class="flex-1 p-4 overflow-y-auto space-y-4">
+    @if (filteredMessages.value()?.length === 0) {
+      <div class="text-center text-gray-500 py-8">No messages yet. Start the conversation!</div>
+    } @else {
+      @for (message of filteredMessages.value(); track message.message._id) {
+        <div class="flex gap-3">
+          <div
+            class="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center"
+          >
+            <span class="text-xs text-gray-600"> {{ message.user?.name?.charAt(0) || 'U' }} </span>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2 mb-1">
+              <span class="font-medium text-sm text-gray-900">
+                {{ message.user?.name || 'Anonymous' }}
+              </span>
+              <span class="text-xs text-gray-500">
+                {{ formatTime(message.message.createdAt) }}
+              </span>
+            </div>
+            <p class="text-gray-700 text-sm whitespace-pre-wrap break-words">
+              {{ message.message.content }}
+            </p>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Message input -->
+  <div class="border-t p-4">
+    <form (ngSubmit)="sendMessage()" class="flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        name="message"
+        (keypress)="onKeyPress($event)"
+        [disabled]="sendMessageMutation.isRunning()"
+        placeholder="Type your message..."
+        class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+      />
+
+      <button
+        type="submit"
+        [disabled]="!newMessage().trim() || sendMessageMutation.isRunning()"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-md transition-colors"
+      >
+        @if (sendMessageMutation.isRunning()) {
+          <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        } @else {
+          Send
+        }
+      </button>
+    </form>
+  </div>
+</div>
