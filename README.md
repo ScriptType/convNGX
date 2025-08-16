@@ -9,6 +9,7 @@ Angular + Convex, made simple. A tiny library that wraps the Convex client with 
 - Works with your Convex project and Better Auth out of the box
 
 Demo app: [projects/example-chat](projects/example-chat/)
+Docs: [projects/convex-angular/README.md](projects/convex-angular/README.md)
 
 ## Why convNGX?
 
@@ -41,6 +42,37 @@ bootstrapApplication(AppComponent, {
     }),
   ],
 });
+```
+
+## Live queries: convexLiveResource
+
+Angular Resource wrapper around Convex watchQuery with smart gating, keep-last, and manual reload, and smart Caching.
+
+Core usage:
+
+```ts
+import { convexLiveResource } from 'convngx';
+import { api } from '@/convex/_generated/api';
+
+// Live updated with angular resource api
+const todosRes = convexLiveResource(api.todos.list);
+const todos = computed(() => this.todoRes.value())
+const todoLoading = computed(() => this.todoRes.isLoading())
+
+// With params (resource auto-disables when params() returns undefined)
+const filter = signal('');
+
+// Completly reactive! And cached!
+const messagesRes = convexLiveResource(
+  api.messages.getFilteredMessagesByContent,
+  () => ({ content: filter() || undefined }),
+);
+
+// Opt out of keep-last value (immediate undefined on param change)
+const resNoKeep = convexLiveResource(api.todos.list, { keep: 'none' });
+
+// Manual refresh (also performs a one-shot .query to seed the latest value)
+messagesRes.reload();
 ```
 
 ## Built‑in auth state (stays in sync)

@@ -61,11 +61,15 @@ Core usage:
 import { convexLiveResource } from 'convngx';
 import { api } from '@/convex/_generated/api';
 
-// No-args query
+// Live updated with angular resource api
 const todosRes = convexLiveResource(api.todos.list);
+const todos = computed(() => this.todoRes.value())
+const todoLoading = computed(() => this.todoRes.isLoading())
 
 // With params (resource auto-disables when params() returns undefined)
 const filter = signal('');
+
+// Completly reactive! And cached!
 const messagesRes = convexLiveResource(
   api.messages.getFilteredMessagesByContent,
   () => ({ content: filter() || undefined }),
